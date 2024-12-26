@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Komentar di HTML</title>
+    <title>Custom H3 Style</title>
+    <style>
+        h3 {
+            font-size: 24px; /* Ukuran font untuk <h3> */
+            line-height: 1.8; /* Spasi antar baris untuk <h3> */
+            color: #333; /* Warna teks */
+        }
+    </style>
 </head>
 <body>
-    <h1>Selamat Datang</h1>
-    <!-- Ini adalah komentar, tidak akan ditampilkan di halaman web -->
-    <p>Ini adalah paragraf.</p>
-    <!-- Komentar juga bisa menjelaskan kode berikut -->
-    <h3>Judul Kecil</h3>
+    <h3>Ini adalah judul dengan gaya khusus</h3>
+    <p>Ini adalah paragraf biasa tanpa perubahan gaya.</p>
+    <h3>Ini judul lainnya dengan ukuran font dan spasi yang sama.</h3>
 </body>
 </html>
+
 
 
 
