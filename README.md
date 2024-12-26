@@ -22,11 +22,15 @@
 
 ###
 
+<h2 align="center">Tugas Besar Ini Dibuat Untuk Memenuhi UAS Mata Kuliah Praktikum Grafik Komputer</h2>
+
+###
+
 <h3 align="left">Beranggotakan</h3>
 
 ###
 
-<p align="left">- Muhamad Chikal Ubaidillah Nurhasan (2306158)<br><br>- Siti Rahmawati (2306146)<br>- Saepul Saban (2306153)<br>- ⚡ In my free time I ...</p>
+<p align="left">- Muhamad Chikal Ubaidillah Nurhasan (2306158)<br>- Siti Rahmawati (2306146)<br>- Saepul Saban (2306153)</p>
 
 ###
 
