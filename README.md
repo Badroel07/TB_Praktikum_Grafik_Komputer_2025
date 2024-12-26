@@ -16,10 +16,8 @@
   <img src="https://visitor-badge.laobi.icu/badge?page_id=maurodesouza.maurodesouza&"  />
 </div>
 
-###
 
 <h1 align="center">Tugas Besar Mata Kuliah Praktikum Grafik Komputer 2025</h1>
-<br>
 <h3 align="center">Tugas Besar Ini Dibuat Untuk Memenuhi UAS Mata Kuliah Praktikum Grafik Komputer</h3>
 <br><br>
 <h3 align="left">Beranggotakan</h3>
