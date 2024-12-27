@@ -3,9 +3,41 @@
 #include <FreeImage.h>
 #include <stdio.h>
 
+// Prototype
+void drawBox();
+void display();
+void reshape(int w, int h);
+void updateRotation();
+GLuint loadTexture(const char* filename);
+
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
+float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
 
+// Fungsi utama
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(800, 600);
+    glutCreateWindow("Minuman Kemasan 3D");
 
+    glewInit();
+    glEnable(GL_DEPTH_TEST);
+
+    // Memuat tekstur untuk setiap sisi
+    textureFront = loadTexture("front.jpg");
+    textureBack = loadTexture("back.jpg");
+    textureLeft = loadTexture("left.jpg");
+    textureRight = loadTexture("right.jpg");
+    textureTop = loadTexture("top.jpg");
+    textureBottom = loadTexture("bottom.jpg");
+
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutIdleFunc(updateRotation); // Fungsi idle untuk animasi rotasi
+
+    glutMainLoop();
+    return 0;
+}
 
 // Fungsi untuk memuat tekstur dari file gambar
 GLuint loadTexture(const char* filename) {
@@ -47,10 +79,14 @@ void drawBox() {
     // Sisi belakang
     glBindTexture(GL_TEXTURE_2D, textureBack);
     glBegin(GL_QUADS);
-    glTexCoord2f(0.0, 0.0); glVertex3f(-0.3, -0.5, -0.2);
-    glTexCoord2f(1.0, 0.0); glVertex3f(-0.3,  0.5, -0.2);
-    glTexCoord2f(1.0, 1.0); glVertex3f( 0.3,  0.5, -0.2);
-    glTexCoord2f(0.0, 1.0); glVertex3f( 0.3, -0.5, -0.2);
+    glTexCoord2f(0.0, 0.0); 
+    glVertex3f(-0.3, -0.5, -0.2);
+    glTexCoord2f(1.0, 0.0); 
+    glVertex3f(-0.3,  0.5, -0.2);
+    glTexCoord2f(1.0, 1.0); 
+    glVertex3f( 0.3,  0.5, -0.2);
+    glTexCoord2f(0.0, 1.0); 
+    glVertex3f( 0.3, -0.5, -0.2);
     glEnd();
 
     // Sisi kiri
@@ -98,7 +134,11 @@ void display() {
     glLoadIdentity();
 
     // Mengatur kamera
-    gluLookAt(2.0, 2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    gluLookAt(2.0, 2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+    // Rotasi objek
+    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
 
     // Menggambar kotak
     drawBox();
@@ -115,27 +155,13 @@ void reshape(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-// Fungsi utama
-int main(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(800, 600);
-    glutCreateWindow("Minuman Kemasan 3D");
+// Fungsi untuk memperbarui rotasi objek
+void updateRotation() {
+    angleX += 0.01f; // Kecepatan rotasi pada sumbu X
+    angleY += 0.01f; // Kecepatan rotasi pada sumbu Y
 
-    glewInit();
-    glEnable(GL_DEPTH_TEST);
+    if (angleX > 360.0f) angleX -= 360.0f;
+    if (angleY > 360.0f) angleY -= 360.0f;
 
-    // Memuat tekstur untuk setiap sisi
-    textureFront = loadTexture("front.jpg");
-    textureBack = loadTexture("back.jpg");
-    textureLeft = loadTexture("left.jpg");
-    textureRight = loadTexture("right.jpg");
-    textureTop = loadTexture("top.jpg");
-    textureBottom = loadTexture("bottom.jpg");
-
-    glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
-
-    glutMainLoop();
-    return 0;
+    glutPostRedisplay(); // Meminta redisplay
 }
