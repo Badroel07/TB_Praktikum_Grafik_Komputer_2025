@@ -5,6 +5,7 @@
 
 // Prototype
 void TehKotak();
+void drawCartecius();
 void display();
 void reshape(int w, int h);
 void updateRotation();
@@ -135,11 +136,10 @@ void display() {
 
     // Mengatur kamera
     gluLookAt(2.0, 2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
+    drawCartecius();
     // Rotasi objek
     glRotatef(angleX, 1.0f, 0.0f, 0.0f);
     glRotatef(angleY, 0.0f, 1.0f, 0.0f);
-
     // Menggambar Teh kotak
     TehKotak();
 
@@ -164,4 +164,22 @@ void updateRotation() {
     if (angleY > 360.0f) angleY -= 360.0f;
 
     glutPostRedisplay(); // Meminta redisplay
+}
+
+void drawCartecius()
+{
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_LINES);
+    //x line
+    glVertex3f(-10.0, 0.0, 0.0);
+    glVertex3f(10.0, 0.0, 0.0);
+
+    //y line
+    glVertex3f(0.0, -10.0, 0.0);
+    glVertex3f(0.0, 10.0, 0.0);
+
+    //z line
+    glVertex3f(0.0, 0.0, -10.0);
+    glVertex3f(0.0, 0.0, 10.0);
+    glEnd();
 }
