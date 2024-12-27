@@ -24,12 +24,12 @@ int main(int argc, char** argv) {
     glEnable(GL_DEPTH_TEST);
 
     // Memuat tekstur untuk setiap sisi
-    textureFront = loadTexture("front.jpg");
-    textureBack = loadTexture("back.jpg");
-    textureLeft = loadTexture("left.jpg");
-    textureRight = loadTexture("right.jpg");
-    textureTop = loadTexture("top.jpg");
-    textureBottom = loadTexture("bottom.jpg");
+    textureFront = loadTexture("assets_TehKotak/front.jpg");
+    textureBack = loadTexture("assets_TehKotak/back.jpg");
+    textureLeft = loadTexture("assets_TehKotak/left.jpg");
+    textureRight = loadTexture("assets_TehKotak/right.jpg");
+    textureTop = loadTexture("assets_TehKotak/top.jpg");
+    textureBottom = loadTexture("assets_TehKotak/bottom.jpg");
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
