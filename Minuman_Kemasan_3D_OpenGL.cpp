@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 // Prototype
-void drawBox();
+void TehKotak();
 void display();
 void reshape(int w, int h);
 void updateRotation();
@@ -64,7 +64,7 @@ GLuint loadTexture(const char* filename) {
 }
 
 // Fungsi untuk menggambar kubus (kemasan minuman) dengan tekstur
-void drawBox() {
+void TehKotak() {
     glEnable(GL_TEXTURE_2D);
 
     // Sisi depan
@@ -140,8 +140,8 @@ void display() {
     glRotatef(angleX, 1.0f, 0.0f, 0.0f);
     glRotatef(angleY, 0.0f, 1.0f, 0.0f);
 
-    // Menggambar kotak
-    drawBox();
+    // Menggambar Teh kotak
+    TehKotak();
 
     glutSwapBuffers();
 }
