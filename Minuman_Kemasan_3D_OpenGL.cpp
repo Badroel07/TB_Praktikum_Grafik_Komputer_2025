@@ -9,9 +9,11 @@ void drawCartecius();
 void display();
 void reshape(int w, int h);
 void updateRotation();
+void SusuKaleng();
+void SusuKaleng2();
+GLuint loadTexture(const char* filename);
 
 // variabel global
-GLuint loadTexture(const char* filename);
 GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
 float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
