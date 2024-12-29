@@ -17,7 +17,7 @@ float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
 // Fungsi utama
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
     glutCreateWindow("Minuman Kemasan 3D");
 
@@ -25,12 +25,12 @@ int main(int argc, char** argv) {
     glEnable(GL_DEPTH_TEST);
 
     // Memuat tekstur untuk setiap sisi
-    textureFront = loadTexture("assets_TehKotak/front.jpg");
-    textureBack = loadTexture("assets_TehKotak/back.jpg");
-    textureLeft = loadTexture("assets_TehKotak/left.jpg");
-    textureRight = loadTexture("assets_TehKotak/right.jpg");
-    textureTop = loadTexture("assets_TehKotak/top.jpg");
-    textureBottom = loadTexture("assets_TehKotak/bottom.jpg");
+    textureFront = loadTexture("assets/Teh_Kotak/front.png");
+    textureBack = loadTexture("assets/Teh_Kotak/back.png");
+    textureLeft = loadTexture("assets/Teh_Kotak/left.png");
+    textureRight = loadTexture("assets/Teh_Kotak/right.png");
+    textureTop = loadTexture("assets/Teh_Kotak/top.png");
+    textureBottom = loadTexture("assets/Teh_Kotak/bottom.png");
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -41,27 +41,43 @@ int main(int argc, char** argv) {
 }
 
 // Fungsi untuk memuat tekstur dari file gambar
-GLuint loadTexture(const char* filename) {
-    FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filename, 0);
-    FIBITMAP* image = FreeImage_Load(format, filename);
-    FIBITMAP* image32Bits = FreeImage_ConvertTo32Bits(image);
-
-    int width = FreeImage_GetWidth(image32Bits);
-    int height = FreeImage_GetHeight(image32Bits);
-
-    GLuint textureID;
+GLuint textureID = 0;
+GLuint loadTexture(const char* path) {
     glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, FreeImage_GetBits(image32Bits));
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    FreeImage_Unload(image32Bits);
-    FreeImage_Unload(image);
-
-    return textureID;
+    void* imgData;
+    int imgWidth;
+    int imgHeight;
+    FREE_IMAGE_FORMAT format = FreeImage_GetFIFFromFilename(path);
+    if (format == FIF_UNKNOWN) {
+        printf("Unknown file type for texture image file %s\n", path);
+        return -1;
+    }
+    FIBITMAP* bitmap = FreeImage_Load(format, path, 0);
+    if (!bitmap) {
+        printf("Failed to load image %s\n", path);
+        return -1;
+    }
+    FIBITMAP* bitmap2 = FreeImage_ConvertTo24Bits(bitmap);
+    FreeImage_Unload(bitmap);
+    imgData = FreeImage_GetBits(bitmap2);
+    imgWidth = FreeImage_GetWidth(bitmap2);
+    imgHeight = FreeImage_GetHeight(bitmap2);
+    if (imgData) {
+        printf("Texture image loaded from file %s, size %dx%d\n", path, imgWidth, imgHeight);
+        int format;
+        if (FI_RGBA_RED == 0)
+            format = GL_RGB;
+        else
+            format = GL_BGR;
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgWidth, imgHeight, 0, format, GL_UNSIGNED_BYTE, imgData);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        textureID++;
+        return textureID - 1;
+    } else {
+        printf("Failed to get texture data from %s\n", path);
+    }
+    return -1;
 }
 
 // Fungsi untuk menggambar kubus (kemasan minuman) dengan tekstur
