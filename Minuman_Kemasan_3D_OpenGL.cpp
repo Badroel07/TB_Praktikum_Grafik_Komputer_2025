@@ -11,9 +11,12 @@ void reshape(int w, int h);
 void updateRotation();
 void SusuKaleng();
 void SusuKaleng2();
+void inisialisasi_lighting();
+void myKeyboard(unsigned char key, int x, int y);
 GLuint loadTexture(const char* filename);
 
 // variabel global
+GLfloat light_position[4] = {0.0, 1.5, 0.0, 1.0};
 GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
 float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
@@ -25,6 +28,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
     glutCreateWindow("Minuman Kemasan 3D");
+    glutKeyboardFunc(myKeyboard);
 
     glewInit();
     glEnable(GL_DEPTH_TEST);
@@ -36,6 +40,7 @@ int main(int argc, char** argv) {
     textureRight = loadTexture("assets/Teh_Kotak/right.png");
     textureTop = loadTexture("assets/Teh_Kotak/top.png");
     textureBottom = loadTexture("assets/Teh_Kotak/bottom.png");
+
     // Tekstur Susu Kaleng
     texture_sisiKaleng = loadTexture("assets/Susu_Kaleng/sisi.png");
     texture_atas = loadTexture("assets/Susu_Kaleng/atas.png");
@@ -45,6 +50,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutIdleFunc(updateRotation); // Fungsi idle untuk animasi rotasi
+    inisialisasi_lighting();
 
     glutMainLoop();
     return 0;
@@ -90,6 +96,8 @@ GLuint loadTexture(const char* path) {
     return -1;
 }
 
+
+//Fungsi Objek Susu Kaleng
 void SusuKaleng() {
     GLUquadric* object = gluNewQuadric();
     gluQuadricTexture(object, GL_TRUE);
@@ -117,6 +125,7 @@ void SusuKaleng() {
     glPopMatrix();
 }
 
+//Objek kaleng bagian dalam
 void SusuKaleng2() {
     GLUquadric* object = gluNewQuadric();
     gluQuadricTexture(object, GL_TRUE);
@@ -129,7 +138,8 @@ void SusuKaleng2() {
     glBindTexture(GL_TEXTURE_2D, tekstur_kaleng);
     gluCylinder(object, 0.1699f, 0.1699f, 0.6159f, 50, 4);
 }
-// Fungsi untuk menggambar kubus (kemasan minuman) dengan tekstur
+
+// Fungsi objek Teh Kotak
 void TehKotak() {
     glEnable(GL_TEXTURE_2D);
 
@@ -198,6 +208,18 @@ void TehKotak() {
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    glDisable(GL_LIGHTING);
+    glBegin(GL_LINES);
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(light_position[0], light_position[1], light_position[2]);
+    glEnd();
+
+    glColor3f(1.0, 1.0, 1.0);
+    glPointSize(5.0);
+    glBegin(GL_POINTS);
+    glVertex3f(light_position[0], light_position[1], light_position[2]);
+    glEnd();
+    glEnable(GL_LIGHTING);
 
     // Mengatur kamera
     gluLookAt(2.0, 2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
@@ -225,6 +247,7 @@ void display() {
     glPopMatrix();
 
     glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 // Fungsi untuk menangani perubahan ukuran jendela
@@ -263,4 +286,44 @@ void drawCartecius()
     glVertex3f(0.0, 0.0, -10.0);
     glVertex3f(0.0, 0.0, 10.0);
     glEnd();
+}
+
+void inisialisasi_lighting()
+{
+    //Pencahayaan
+    GLfloat light_diffuse[4] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat light_ambient[4] = {0.0, 0.0, 0.0, 1.0};
+    GLfloat light_specular[4] = {1.0, 1.0, 1.0, 1.0};
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+}
+
+void myKeyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+        case 'w':
+            light_position[2] -= 0.1;
+            break;
+        case 's':
+            light_position[2] += 0.1;
+            break;
+        case 'd':
+            light_position[0] += 0.1;
+            break;
+        case 'a':
+            light_position[0] -= 0.1;
+            break;
+        case 'r':
+            light_position[0] = 0.0;
+            light_position[2] = 0.0;
+            break;
+    }
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 }
