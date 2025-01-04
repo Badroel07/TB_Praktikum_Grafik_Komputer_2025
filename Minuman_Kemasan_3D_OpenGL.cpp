@@ -12,11 +12,14 @@ void reshape(int w, int h);
 void updateRotation();
 void SusuKaleng();
 void SusuKaleng2();
+void rotasi1();
+void rotasi2();
 void myKeyboard(unsigned char key, int x, int y);
 GLuint loadTexture(const char* filename);
 
 // variabel global
 bool hidden = false;
+int mode_rotasi = 0;
 GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas;
 GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
@@ -241,7 +244,7 @@ void TehGelas()
     glPushMatrix();
     glTranslatef(0, 0, 0.68); // Pindahkan ke atas kaleng
     glBindTexture(GL_TEXTURE_2D, penutup_TehGelas);
-    gluDisk(object, 0, 0.3f, 50, 2);
+    gluDisk(object, 0, 0.27f, 50, 2);
     glPopMatrix();
 
     // Bottom (penutup bawah)
@@ -261,23 +264,31 @@ void display() {
     gluLookAt(2.0, 2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     hiddenCarte();
 
-    // Rotasi objek utama (Teh Kotak)
+    // Merender Objek Teh Kotak
     glPushMatrix();
-    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
-    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    glTranslatef(0.5, 0.0, -0.5);
+    
+    if (mode_rotasi == 0)
+    {
+        rotasi1();
+    }
+    else
+    {
+        glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    }
 
-    // Menggambar Teh Kotak
+ 
     TehKotak();
     glPopMatrix();
 
-    // Rotasi dan posisi objek kedua (Susu Kaleng)
+    // Merender Objek Susu Kaleng
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
-    glTranslatef(1.0, 0.0, 0.0); // Posisikan di samping Teh Kotak
+    glTranslatef(0.0, 0.0, 1.0); // Posisikan di samping Teh Kotak
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
     glRotatef(angleY, 0.0f, 0.0f, 1.0f);
 
-    // Menggambar Susu Kaleng
+    // Merender Objek Teh Gelas
     SusuKaleng2();
     SusuKaleng();
     glPopMatrix();
@@ -285,8 +296,16 @@ void display() {
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
     glTranslatef(-1.0, 0.0, 0.0);
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    glRotatef(angleY, 0.0f, 0.0f, 1.0f);
+
+    if (mode_rotasi == 0)
+    {
+        rotasi1();
+    }
+    else
+    {
+        rotasi2();
+    }
+
     TehGelas();
     glPopMatrix();
 
@@ -338,6 +357,12 @@ void myKeyboard(unsigned char key, int x, int y)
         case 'c':
             hidden = !hidden;
             break;
+        case '1':
+            mode_rotasi = 0;
+            break;
+        case '2':    
+            mode_rotasi = 1;
+            break;
     }
 }
 
@@ -347,4 +372,16 @@ void hiddenCarte()
     {
         drawCartecius();
     }
+}
+
+void rotasi1()
+{
+    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+}
+
+void rotasi2()
+{
+    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 0.0f, 1.0f);
 }
