@@ -17,6 +17,7 @@ GLuint loadTexture(const char* filename);
 
 // variabel global
 bool hidden = false;
+GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas;
 GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
 float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
@@ -46,6 +47,12 @@ int main(int argc, char** argv) {
     texture_atas = loadTexture("assets/Susu_Kaleng/atas.png");
     texture_bawah = loadTexture("assets/Susu_Kaleng/bawah.png");
     tekstur_kaleng = loadTexture("assets/Susu_Kaleng/tekstur_kaleng.png");
+
+    // Tekstur Teh Gelas
+    sisi_TehGelas = loadTexture("assets/Teh_Gelas/sisi.png");
+    atas1_TehGelas = loadTexture("assets/Teh_Gelas/atas1.png");
+    atas2_TehGelas = loadTexture("assets/Teh_Gelas/atas2.png");
+    penutup_TehGelas = loadTexture("assets/Teh_Gelas/penutup.png");
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -203,6 +210,48 @@ void TehKotak() {
     glDisable(GL_TEXTURE_2D);
 }
 
+void TehGelas()
+{
+    GLUquadric* object = gluNewQuadric();
+    gluQuadricTexture(object, GL_TRUE);
+    gluQuadricNormals(object, GLU_SMOOTH);
+
+    float radius = 0.17f; // Sesuaikan diameter susu kaleng (lebar Teh Kotak adalah 0.6, jadi radius 0.2)
+    float height = 0.4f; // Sesuaikan tinggi susu kaleng (tinggi Teh Kotak adalah 1.0, jadi kaleng lebih kecil)
+
+    // Cylinder (sisi kaleng)
+    glBindTexture(GL_TEXTURE_2D, sisi_TehGelas);
+    gluCylinder(object, radius, 0.225f, 0.6f, 50, 4);
+
+    // atas1
+    glPushMatrix();
+    glTranslatef(0, 0, 0.6); // Pindahkan ke atas kaleng
+    glBindTexture(GL_TEXTURE_2D, atas1_TehGelas);
+    gluCylinder(object, 0.225f, 0.24f, 0.05f, 50, 4);
+    glPopMatrix();
+   
+    // atas2
+    glPushMatrix();
+    glTranslatef(0, 0, 0.625); // Pindahkan ke atas kaleng
+    glBindTexture(GL_TEXTURE_2D, atas2_TehGelas);
+    gluCylinder(object, 0.24f, 0.24f, 0.05f, 50, 4);
+    glPopMatrix();
+    
+    // penutup atas
+    glPushMatrix();
+    glTranslatef(0, 0, 0.68); // Pindahkan ke atas kaleng
+    glBindTexture(GL_TEXTURE_2D, penutup_TehGelas);
+    gluDisk(object, 0, 0.3f, 50, 2);
+    glPopMatrix();
+
+    // Bottom (penutup bawah)
+    glPushMatrix();
+    glTranslatef(0, 0, 0); // Pindahkan ke bawah kaleng
+    glBindTexture(GL_TEXTURE_2D, texture_bawah);
+    gluDisk(object, 0, radius, 40, 1);
+    glPopMatrix();
+}
+
 // Fungsi untuk merender objek
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -231,6 +280,14 @@ void display() {
     // Menggambar Susu Kaleng
     SusuKaleng2();
     SusuKaleng();
+    glPopMatrix();
+
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    glTranslatef(-1.0, 0.0, 0.0);
+    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 0.0f, 1.0f);
+    TehGelas();
     glPopMatrix();
 
     glutSwapBuffers();
