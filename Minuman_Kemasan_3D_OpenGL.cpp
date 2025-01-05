@@ -20,7 +20,7 @@ GLuint loadTexture(const char* filename);
 // variabel global
 bool hidden = false;
 int mode_rotasi = 0;
-GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas;
+GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas, bawah_TehGelas;
 GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
 float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
@@ -56,6 +56,7 @@ int main(int argc, char** argv) {
     atas1_TehGelas = loadTexture("assets/Teh_Gelas/atas1.png");
     atas2_TehGelas = loadTexture("assets/Teh_Gelas/atas2.png");
     penutup_TehGelas = loadTexture("assets/Teh_Gelas/penutup.png");
+    bawah_TehGelas = loadTexture("assets/Teh_Gelas/bawah.png");
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -250,7 +251,7 @@ void TehGelas()
     // Bottom (penutup bawah)
     glPushMatrix();
     glTranslatef(0, 0, 0); // Pindahkan ke bawah kaleng
-    glBindTexture(GL_TEXTURE_2D, texture_bawah);
+    glBindTexture(GL_TEXTURE_2D, bawah_TehGelas);
     gluDisk(object, 0, radius, 40, 1);
     glPopMatrix();
 }
@@ -285,8 +286,14 @@ void display() {
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
     glTranslatef(0.0, 0.0, 1.0); // Posisikan di samping Teh Kotak
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    glRotatef(angleY, 0.0f, 0.0f, 1.0f);
+    if (mode_rotasi == 0)
+        {
+            rotasi1();
+        }
+        else
+        {
+            rotasi2();
+        }
 
     // Merender Objek Teh Gelas
     SusuKaleng2();
