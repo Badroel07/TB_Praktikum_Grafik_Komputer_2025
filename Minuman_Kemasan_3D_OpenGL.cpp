@@ -4,15 +4,27 @@
 #include <stdio.h>
 
 // Prototype
+void hiddenCarte();
 void TehKotak();
 void drawCartecius();
 void display();
 void reshape(int w, int h);
 void updateRotation();
+void SusuKaleng();
+void SusuKaleng2();
+void rotasi1();
+void rotasi2();
+void myKeyboard(unsigned char key, int x, int y);
 GLuint loadTexture(const char* filename);
 
+// variabel global
+bool hidden = false;
+int mode_rotasi = 0;
+GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas, bawah_TehGelas;
+GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
 float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
+float tick = 0.0;
 
 // Fungsi utama
 int main(int argc, char** argv) {
@@ -20,17 +32,31 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
     glutCreateWindow("Minuman Kemasan 3D");
+    glutKeyboardFunc(myKeyboard);
 
     glewInit();
     glEnable(GL_DEPTH_TEST);
 
-    // Memuat tekstur untuk setiap sisi
+    // Tekstur Teh Kotak
     textureFront = loadTexture("assets/Teh_Kotak/front.png");
     textureBack = loadTexture("assets/Teh_Kotak/back.png");
     textureLeft = loadTexture("assets/Teh_Kotak/left.png");
     textureRight = loadTexture("assets/Teh_Kotak/right.png");
     textureTop = loadTexture("assets/Teh_Kotak/top.png");
     textureBottom = loadTexture("assets/Teh_Kotak/bottom.png");
+
+    // Tekstur Susu Kaleng
+    texture_sisiKaleng = loadTexture("assets/Susu_Kaleng/sisi.png");
+    texture_atas = loadTexture("assets/Susu_Kaleng/atas.png");
+    texture_bawah = loadTexture("assets/Susu_Kaleng/bawah.png");
+    tekstur_kaleng = loadTexture("assets/Susu_Kaleng/tekstur_kaleng.png");
+
+    // Tekstur Teh Gelas
+    sisi_TehGelas = loadTexture("assets/Teh_Gelas/sisi.png");
+    atas1_TehGelas = loadTexture("assets/Teh_Gelas/atas1.png");
+    atas2_TehGelas = loadTexture("assets/Teh_Gelas/atas2.png");
+    penutup_TehGelas = loadTexture("assets/Teh_Gelas/penutup.png");
+    bawah_TehGelas = loadTexture("assets/Teh_Gelas/bawah.png");
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -80,7 +106,50 @@ GLuint loadTexture(const char* path) {
     return -1;
 }
 
-// Fungsi untuk menggambar kubus (kemasan minuman) dengan tekstur
+
+//Fungsi Objek Susu Kaleng
+void SusuKaleng() {
+    GLUquadric* object = gluNewQuadric();
+    gluQuadricTexture(object, GL_TRUE);
+    gluQuadricNormals(object, GLU_SMOOTH);
+
+    float radius = 0.17f; // Sesuaikan diameter susu kaleng (lebar Teh Kotak adalah 0.6, jadi radius 0.2)
+    float height = 0.4f; // Sesuaikan tinggi susu kaleng (tinggi Teh Kotak adalah 1.0, jadi kaleng lebih kecil)
+
+    // Cylinder (sisi kaleng)
+    glBindTexture(GL_TEXTURE_2D, texture_sisiKaleng);
+    gluCylinder(object, radius, radius, 0.6f, 50, 4);
+
+    // Top (penutup atas)
+    glPushMatrix();
+    glTranslatef(0, 0, 0.62); // Pindahkan ke atas kaleng
+    glBindTexture(GL_TEXTURE_2D, texture_atas);
+    gluDisk(object, 0, radius, 50, 2);
+    glPopMatrix();
+
+    // Bottom (penutup bawah)
+    glPushMatrix();
+    glTranslatef(0, 0, 0); // Pindahkan ke bawah kaleng
+    glBindTexture(GL_TEXTURE_2D, texture_bawah);
+    gluDisk(object, 0, radius, 40, 1);
+    glPopMatrix();
+}
+
+//Objek kaleng bagian dalam
+void SusuKaleng2() {
+    GLUquadric* object = gluNewQuadric();
+    gluQuadricTexture(object, GL_TRUE);
+    gluQuadricNormals(object, GLU_SMOOTH);
+
+    float radius = 0.2f; // Sesuaikan diameter susu kaleng (lebar Teh Kotak adalah 0.6, jadi radius 0.2)
+    float height = 0.4f; // Sesuaikan tinggi susu kaleng (tinggi Teh Kotak adalah 1.0, jadi kaleng lebih kecil)
+
+    // Cylinder (sisi kaleng)
+    glBindTexture(GL_TEXTURE_2D, tekstur_kaleng);
+    gluCylinder(object, 0.1699f, 0.1699f, 0.6159f, 50, 4);
+}
+
+// Fungsi objek Teh Kotak
 void TehKotak() {
     glEnable(GL_TEXTURE_2D);
 
@@ -145,6 +214,48 @@ void TehKotak() {
     glDisable(GL_TEXTURE_2D);
 }
 
+void TehGelas()
+{
+    GLUquadric* object = gluNewQuadric();
+    gluQuadricTexture(object, GL_TRUE);
+    gluQuadricNormals(object, GLU_SMOOTH);
+
+    float radius = 0.17f; // Sesuaikan diameter susu kaleng (lebar Teh Kotak adalah 0.6, jadi radius 0.2)
+    float height = 0.4f; // Sesuaikan tinggi susu kaleng (tinggi Teh Kotak adalah 1.0, jadi kaleng lebih kecil)
+
+    // Cylinder (sisi kaleng)
+    glBindTexture(GL_TEXTURE_2D, sisi_TehGelas);
+    gluCylinder(object, radius, 0.225f, 0.6f, 50, 4);
+
+    // atas1
+    glPushMatrix();
+    glTranslatef(0, 0, 0.6); // Pindahkan ke atas kaleng
+    glBindTexture(GL_TEXTURE_2D, atas1_TehGelas);
+    gluCylinder(object, 0.225f, 0.24f, 0.05f, 50, 4);
+    glPopMatrix();
+   
+    // atas2
+    glPushMatrix();
+    glTranslatef(0, 0, 0.625); // Pindahkan ke atas kaleng
+    glBindTexture(GL_TEXTURE_2D, atas2_TehGelas);
+    gluCylinder(object, 0.24f, 0.24f, 0.05f, 50, 4);
+    glPopMatrix();
+    
+    // penutup atas
+    glPushMatrix();
+    glTranslatef(0, 0, 0.68); // Pindahkan ke atas kaleng
+    glBindTexture(GL_TEXTURE_2D, penutup_TehGelas);
+    gluDisk(object, 0, 0.27f, 50, 2);
+    glPopMatrix();
+
+    // Bottom (penutup bawah)
+    glPushMatrix();
+    glTranslatef(0, 0, 0); // Pindahkan ke bawah kaleng
+    glBindTexture(GL_TEXTURE_2D, bawah_TehGelas);
+    gluDisk(object, 0, radius, 40, 1);
+    glPopMatrix();
+}
+
 // Fungsi untuk merender objek
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -152,12 +263,58 @@ void display() {
 
     // Mengatur kamera
     gluLookAt(2.0, 2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    drawCartecius();
-    // Rotasi objek
-    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
-    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
-    // Menggambar Teh kotak
+    hiddenCarte();
+
+    // Merender Objek Teh Kotak
+    glPushMatrix();
+    glTranslatef(0.5, 0.0, -0.5);
+    
+    if (mode_rotasi == 0)
+    {
+        rotasi1();
+    }
+    else
+    {
+        glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    }
+
+ 
     TehKotak();
+    glPopMatrix();
+
+    // Merender Objek Susu Kaleng
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    glTranslatef(0.0, 0.0, 1.0); // Posisikan di samping Teh Kotak
+    if (mode_rotasi == 0)
+        {
+            rotasi1();
+        }
+        else
+        {
+            rotasi2();
+        }
+
+    // Merender Objek Teh Gelas
+    SusuKaleng2();
+    SusuKaleng();
+    glPopMatrix();
+
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    glTranslatef(-1.0, 0.0, 0.0);
+
+    if (mode_rotasi == 0)
+    {
+        rotasi1();
+    }
+    else
+    {
+        rotasi2();
+    }
+
+    TehGelas();
+    glPopMatrix();
 
     glutSwapBuffers();
 }
@@ -198,4 +355,40 @@ void drawCartecius()
     glVertex3f(0.0, 0.0, -10.0);
     glVertex3f(0.0, 0.0, 10.0);
     glEnd();
+}
+
+void myKeyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+        case 'c':
+            hidden = !hidden;
+            break;
+        case '1':
+            mode_rotasi = 0;
+            break;
+        case '2':    
+            mode_rotasi = 1;
+            break;
+    }
+}
+
+void hiddenCarte()
+{
+    if (hidden)
+    {
+        drawCartecius();
+    }
+}
+
+void rotasi1()
+{
+    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+}
+
+void rotasi2()
+{
+    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 0.0f, 1.0f);
 }
