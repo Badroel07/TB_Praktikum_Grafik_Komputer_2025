@@ -1,3 +1,4 @@
+//Library 
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <FreeImage.h>
@@ -135,7 +136,7 @@ void SusuKaleng() {
     glPopMatrix();
 }
 
-//Objek kaleng bagian dalam
+// Fungsi Objek Kaleng Bagian Dalam
 void SusuKaleng2() {
     GLUquadric* object = gluNewQuadric();
     gluQuadricTexture(object, GL_TRUE);
@@ -149,7 +150,7 @@ void SusuKaleng2() {
     gluCylinder(object, 0.1699f, 0.1699f, 0.6159f, 50, 4);
 }
 
-// Fungsi objek Teh Kotak
+// Fungsi Objek Teh Kotak
 void TehKotak() {
     glEnable(GL_TEXTURE_2D);
 
@@ -214,31 +215,33 @@ void TehKotak() {
     glDisable(GL_TEXTURE_2D);
 }
 
+
+// Fungsi Objek Teh Gelas
 void TehGelas()
 {
     GLUquadric* object = gluNewQuadric();
     gluQuadricTexture(object, GL_TRUE);
     gluQuadricNormals(object, GLU_SMOOTH);
 
-    float radius = 0.17f; // Sesuaikan diameter susu kaleng (lebar Teh Kotak adalah 0.6, jadi radius 0.2)
+    float radius = 0.135f; // Sesuaikan diameter susu kaleng (lebar Teh Kotak adalah 0.6, jadi radius 0.2)
     float height = 0.4f; // Sesuaikan tinggi susu kaleng (tinggi Teh Kotak adalah 1.0, jadi kaleng lebih kecil)
 
     // Cylinder (sisi kaleng)
     glBindTexture(GL_TEXTURE_2D, sisi_TehGelas);
-    gluCylinder(object, radius, 0.225f, 0.6f, 50, 4);
+    gluCylinder(object, radius, 0.2f, 0.6f, 50, 4);
 
     // atas1
     glPushMatrix();
     glTranslatef(0, 0, 0.6); // Pindahkan ke atas kaleng
     glBindTexture(GL_TEXTURE_2D, atas1_TehGelas);
-    gluCylinder(object, 0.225f, 0.24f, 0.05f, 50, 4);
+    gluCylinder(object, 0.2f, 0.22f, 0.05f, 50, 4);
     glPopMatrix();
    
     // atas2
     glPushMatrix();
     glTranslatef(0, 0, 0.625); // Pindahkan ke atas kaleng
     glBindTexture(GL_TEXTURE_2D, atas2_TehGelas);
-    gluCylinder(object, 0.24f, 0.24f, 0.05f, 50, 4);
+    gluCylinder(object, 0.22f, 0.22f, 0.05f, 50, 4);
     glPopMatrix();
     
     // penutup atas
@@ -339,6 +342,7 @@ void updateRotation() {
     glutPostRedisplay(); // Meminta redisplay
 }
 
+//Fungsi untuk menggambar sumbu cartecius
 void drawCartecius()
 {
     glColor3f(1.0, 1.0, 1.0);
@@ -356,7 +360,8 @@ void drawCartecius()
     glVertex3f(0.0, 0.0, 10.0);
     glEnd();
 }
-
+ 
+//Fungsi untuk mengatur keyboard
 void myKeyboard(unsigned char key, int x, int y)
 {
     switch (key)
@@ -373,6 +378,7 @@ void myKeyboard(unsigned char key, int x, int y)
     }
 }
 
+// Fungsi untuk menyembunyikan sumbu cartecius
 void hiddenCarte()
 {
     if (hidden)
@@ -381,12 +387,14 @@ void hiddenCarte()
     }
 }
 
+// Fungsi untuk rotasi objek mode 1
 void rotasi1()
 {
     glRotatef(angleX, 1.0f, 0.0f, 0.0f);
     glRotatef(angleY, 0.0f, 1.0f, 0.0f);
 }
 
+// Fungsi untuk rotasi objek mode 2
 void rotasi2()
 {
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
