@@ -3,7 +3,7 @@
 #include <GL/glut.h>
 #include <FreeImage.h>
 #include <stdio.h>
-//anjay
+
 // Prototype
 void hiddenCarte();
 void TehKotak();
