@@ -223,18 +223,18 @@ void TehGelas()
     gluQuadricTexture(object, GL_TRUE);
     gluQuadricNormals(object, GLU_SMOOTH);
 
-    float radius = 0.135f; // Sesuaikan diameter susu kaleng (lebar Teh Kotak adalah 0.6, jadi radius 0.2)
+    float radius = 0.14f; // Sesuaikan diameter susu kaleng (lebar Teh Kotak adalah 0.6, jadi radius 0.2)
     float height = 0.4f; // Sesuaikan tinggi susu kaleng (tinggi Teh Kotak adalah 1.0, jadi kaleng lebih kecil)
 
     // Cylinder (sisi kaleng)
     glBindTexture(GL_TEXTURE_2D, sisi_TehGelas);
-    gluCylinder(object, radius, 0.2f, 0.6f, 50, 4);
+    gluCylinder(object, radius, 0.19f, 0.6f, 50, 4);
 
     // atas1
     glPushMatrix();
     glTranslatef(0, 0, 0.6); // Pindahkan ke atas kaleng
     glBindTexture(GL_TEXTURE_2D, atas1_TehGelas);
-    gluCylinder(object, 0.2f, 0.22f, 0.05f, 50, 4);
+    gluCylinder(object, 0.19f, 0.22f, 0.05f, 50, 4);
     glPopMatrix();
    
     // atas2
