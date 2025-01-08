@@ -298,11 +298,11 @@ void display() {
             rotasi2();
         }
 
-    // Merender Objek Teh Gelas
     SusuKaleng2();
     SusuKaleng();
     glPopMatrix();
 
+    // Merender Objek Teh Gelas
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
     glTranslatef(-1.0, 0.0, 0.0);
