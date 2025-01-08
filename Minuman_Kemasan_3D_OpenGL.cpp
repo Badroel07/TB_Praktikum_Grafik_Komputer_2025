@@ -21,7 +21,7 @@ GLuint loadTexture(const char* filename);
 // variabel global
 bool hidden = false;
 int mode_rotasi = 0;
-GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas, bawah_TehGelas;
+GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas, penutup2_TehGelas,bawah_TehGelas;
 GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
 float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
     atas1_TehGelas = loadTexture("assets/Teh_Gelas/atas1.png");
     atas2_TehGelas = loadTexture("assets/Teh_Gelas/atas2.png");
     penutup_TehGelas = loadTexture("assets/Teh_Gelas/penutup.png");
+    penutup2_TehGelas = loadTexture("assets/Teh_Gelas/penutup2.png");
     bawah_TehGelas = loadTexture("assets/Teh_Gelas/bawah.png");
 
     glutDisplayFunc(display);
@@ -119,20 +120,20 @@ void SusuKaleng() {
 
     // Cylinder (sisi kaleng)
     glBindTexture(GL_TEXTURE_2D, texture_sisiKaleng);
-    gluCylinder(object, radius, radius, 0.6f, 50, 4);
+    gluCylinder(object, radius, radius, 0.6f, 50, 20);
 
     // Top (penutup atas)
     glPushMatrix();
     glTranslatef(0, 0, 0.62); // Pindahkan ke atas kaleng
     glBindTexture(GL_TEXTURE_2D, texture_atas);
-    gluDisk(object, 0, radius, 50, 2);
+    gluDisk(object, 0, radius, 50, 20);
     glPopMatrix();
 
     // Bottom (penutup bawah)
     glPushMatrix();
     glTranslatef(0, 0, 0); // Pindahkan ke bawah kaleng
     glBindTexture(GL_TEXTURE_2D, texture_bawah);
-    gluDisk(object, 0, radius, 40, 1);
+    gluDisk(object, 0, radius, 40, 20);
     glPopMatrix();
 }
 
@@ -147,7 +148,7 @@ void SusuKaleng2() {
 
     // Cylinder (sisi kaleng)
     glBindTexture(GL_TEXTURE_2D, tekstur_kaleng);
-    gluCylinder(object, 0.1699f, 0.1699f, 0.6159f, 50, 4);
+    gluCylinder(object, 0.1699f, 0.1699f, 0.6159f, 50, 20);
 }
 
 // Fungsi Objek Teh Kotak
@@ -228,27 +229,34 @@ void TehGelas()
 
     // Cylinder (sisi kaleng)
     glBindTexture(GL_TEXTURE_2D, sisi_TehGelas);
-    gluCylinder(object, radius, 0.19f, 0.6f, 50, 4);
+    gluCylinder(object, radius, 0.19f, 0.6f, 50, 20);
 
     // atas1
     glPushMatrix();
     glTranslatef(0, 0, 0.6); // Pindahkan ke atas kaleng
     glBindTexture(GL_TEXTURE_2D, atas1_TehGelas);
-    gluCylinder(object, 0.19f, 0.22f, 0.05f, 50, 4);
+    gluCylinder(object, 0.19f, 0.22f, 0.05f, 50, 20);
     glPopMatrix();
    
     // atas2
     glPushMatrix();
     glTranslatef(0, 0, 0.625); // Pindahkan ke atas kaleng
     glBindTexture(GL_TEXTURE_2D, atas2_TehGelas);
-    gluCylinder(object, 0.22f, 0.22f, 0.05f, 50, 4);
+    gluCylinder(object, 0.22f, 0.22f, 0.05f, 50, 20);
     glPopMatrix();
     
     // penutup atas
     glPushMatrix();
     glTranslatef(0, 0, 0.68); // Pindahkan ke atas kaleng
     glBindTexture(GL_TEXTURE_2D, penutup_TehGelas);
-    gluDisk(object, 0, 0.27f, 50, 2);
+    gluDisk(object, 0, 0.27f, 50, 20);
+    glPopMatrix();
+
+    // penutup atas2
+    glPushMatrix();
+    glTranslatef(0, 0, 0.67); // Pindahkan ke atas kaleng
+    glBindTexture(GL_TEXTURE_2D, penutup2_TehGelas);
+    gluDisk(object, 0, 0.25f, 50, 20);
     glPopMatrix();
 
     // Bottom (penutup bawah)
@@ -355,7 +363,7 @@ void drawCartecius()
     glVertex3f(0.0, -10.0, 0.0);
     glVertex3f(0.0, 10.0, 0.0);
 
-    //z line
+    // z line
     glVertex3f(0.0, 0.0, -10.0);
     glVertex3f(0.0, 0.0, 10.0);
     glEnd();
@@ -376,6 +384,7 @@ void myKeyboard(unsigned char key, int x, int y)
             mode_rotasi = 1;
             break;
     }
+    glutPostRedisplay();
 }
 
 // Fungsi untuk menyembunyikan sumbu cartecius
