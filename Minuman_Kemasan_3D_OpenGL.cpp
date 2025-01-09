@@ -420,8 +420,7 @@ void pencahayaan()
     glEnable(GL_DEPTH_TEST);
 
     // Set light properties
-    // Set light properties
-    GLfloat light_pos[] = {300.0f, 500.0f, 500.0f, 1.0f};
+    GLfloat light_pos[] = {0.0f, 0.0f, 0.0f, 1.0f};
     GLfloat light_amb[] = {0.2f, 0.2f, 0.2f, 1.0f};
     GLfloat light_diff[] = {0.8f, 0.8f, 0.8f, 1.0f};
     GLfloat light_spec[] = {1.0f, 1.0f, 1.0f, 1.0f};
