@@ -16,6 +16,7 @@ void SusuKaleng2();
 void rotasi1();
 void rotasi2();
 void myKeyboard(unsigned char key, int x, int y);
+void pencahayaan();
 GLuint loadTexture(const char* filename);
 
 // variabel global
@@ -63,7 +64,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutIdleFunc(updateRotation); // Fungsi idle untuk animasi rotasi
-
+    pencahayaan();
     glutMainLoop();
     return 0;
 }
@@ -408,4 +409,25 @@ void rotasi2()
 {
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
     glRotatef(angleY, 0.0f, 0.0f, 1.0f);
+}
+
+void pencahayaan()
+{
+    //Pencahayaan
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_DEPTH_TEST);
+
+    // Set light properties
+    // Set light properties
+    GLfloat light_pos[] = {300.0f, 500.0f, 500.0f, 1.0f};
+    GLfloat light_amb[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat light_diff[] = {0.8f, 0.8f, 0.8f, 1.0f};
+    GLfloat light_spec[] = {1.0f, 1.0f, 1.0f, 1.0f};
+
+    glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diff);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_spec);
 }
