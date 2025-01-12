@@ -1,0 +1,21 @@
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+        case '1':
+            mode_rotasi = 0;
+            break;
+        case '2':    
+            mode_rotasi = 1;
+            break;
+        case '+':
+            scale_factor += 0.1f; // Increase scale factor
+            break;
+        case '-':
+            scale_factor -= 0.1f; // Decrease scale factor
+            break;
+        default:
+            break;
+    }
+    glutPostRedisplay();
+}

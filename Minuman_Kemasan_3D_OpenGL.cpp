@@ -22,6 +22,9 @@ GLuint loadTexture(const char* filename);
 // variabel global
 bool hidden = false;
 int mode_rotasi = 0;
+float ukuranTK = 1.0; // Ukuran Teh Kotak
+float ukuranSK = 1.0; // Ukuran Susu Kaleng
+float ukuranTG = 1.0; // Ukuran Teh Gelas
 GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas, penutup2_TehGelas,bawah_TehGelas;
 GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
@@ -279,6 +282,7 @@ void display() {
 
     // Merender Objek Teh Kotak
     glPushMatrix();
+    glScalef(ukuranTK, ukuranTK, ukuranTK);
     glTranslatef(0.5, 0.0, -0.5);
     
     if (mode_rotasi == 0)
@@ -297,6 +301,7 @@ void display() {
     // Merender Objek Susu Kaleng
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
+    glScalef(ukuranSK, ukuranSK, ukuranSK);
     glTranslatef(0.0, 0.0, 1.0); // Posisikan di samping Teh Kotak
     if (mode_rotasi == 0)
         {
@@ -314,6 +319,7 @@ void display() {
     // Merender Objek Teh Gelas
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
+    glScalef(ukuranTG, ukuranTG, ukuranTG);
     glTranslatef(-1.0, 0.0, 0.0);
 
     if (mode_rotasi == 0)
@@ -370,7 +376,7 @@ void drawCartecius()
     glEnd();
 }
  
-//Fungsi untuk mengatur keyboard
+//Fungsi untuk mengatur keyboard (Chikal)
 void myKeyboard(unsigned char key, int x, int y)
 {
     switch (key)
@@ -383,6 +389,29 @@ void myKeyboard(unsigned char key, int x, int y)
             break;
         case '2':    
             mode_rotasi = 1;
+            break;
+        case 't':
+            ukuranTK -= 0.1;
+            break;
+        case 'T':
+            ukuranTK += 0.1;
+            break;
+        case 'y':
+            ukuranSK -= 0.1;
+            break;
+        case 'Y':
+            ukuranSK += 0.1;
+            break;
+        case 'u':    
+            ukuranTG -= 0.1;
+            break;
+        case 'U':    
+            ukuranTG += 0.1;
+            break;
+        case 'r':
+            ukuranTK=1.0;
+            ukuranSK=1.0;
+            ukuranTG=1.0;
             break;
     }
     glutPostRedisplay();
