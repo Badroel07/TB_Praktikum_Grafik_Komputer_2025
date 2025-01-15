@@ -1,10 +1,10 @@
-//Library 
+//Library (Saban)
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <FreeImage.h>
 #include <stdio.h>
 
-// Prototype
+// Prototype (Saban)
 void hiddenCarte();
 void TehKotak();
 void drawCartecius();
@@ -13,13 +13,14 @@ void reshape(int w, int h);
 void updateRotation();
 void SusuKaleng();
 void SusuKaleng2();
+void TehGelas();
 void rotasi1();
 void rotasi2();
 void myKeyboard(unsigned char key, int x, int y);
 void pencahayaan();
 GLuint loadTexture(const char* filename);
 
-// variabel global
+// variabel global (Chikal)
 bool hidden = false;
 int mode_rotasi = 0;
 float ukuranTK = 1.0; // Ukuran Teh Kotak
@@ -31,16 +32,16 @@ GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, texture
 float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
 float tick = 0.0;
 
-// Fungsi utama
+// Fungsi utama (Chikal)
 int main(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-    glutInitWindowSize(800, 600);
-    glutCreateWindow("Minuman Kemasan 3D");
+    glutInit(&argc, argv); 
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); 
+    glutInitWindowSize(800, 600); 
+    glutCreateWindow("Minuman Kemasan 3D - Kelompok 10"); 
     glutKeyboardFunc(myKeyboard);
 
-    glewInit();
-    glEnable(GL_DEPTH_TEST);
+    glewInit(); 
+    glEnable(GL_DEPTH_TEST); 
 
     // Tekstur Teh Kotak
     textureFront = loadTexture("assets/Teh_Kotak/front.png");
@@ -64,15 +65,15 @@ int main(int argc, char** argv) {
     penutup2_TehGelas = loadTexture("assets/Teh_Gelas/penutup2.png");
     bawah_TehGelas = loadTexture("assets/Teh_Gelas/bawah.png");
 
-    glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
+    glutDisplayFunc(display); // Fungsi display untuk merender objek
+    glutReshapeFunc(reshape); // Fungsi reshape agar tidak terjadi distorsi
     glutIdleFunc(updateRotation); // Fungsi idle untuk animasi rotasi
-    pencahayaan();
-    glutMainLoop();
+    pencahayaan(); // Fungsi pencahayaan
+    glutMainLoop(); // Loop utama
     return 0;
 }
 
-// Fungsi untuk memuat tekstur dari file gambar
+// Fungsi untuk memuat tekstur dari file gambar (Chikal)
 GLuint textureID = 0;
 GLuint loadTexture(const char* path) {
     glGenTextures(1, &textureID);
@@ -112,8 +113,177 @@ GLuint loadTexture(const char* path) {
     return -1;
 }
 
+// Fungsi untuk merender objek (Chikal)
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
 
-//Fungsi Objek Susu Kaleng
+    // Mengatur kamera
+    gluLookAt(2.0, 2.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    hiddenCarte();
+
+    // Merender Objek Teh Kotak
+    glPushMatrix();
+    glScalef(ukuranTK, ukuranTK, ukuranTK);
+    glTranslatef(0.5, 0.0, -0.5);
+    
+    if (mode_rotasi == 0)
+    {
+        rotasi1();
+    }
+    else
+    {
+        glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+    }
+
+ 
+    TehKotak();
+    glPopMatrix();
+
+    // Merender Objek Susu Kaleng
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    glScalef(ukuranSK, ukuranSK, ukuranSK);
+    glTranslatef(0.0, 0.0, 1.0); // Posisikan di samping Teh Kotak
+    if (mode_rotasi == 0)
+        {
+            rotasi1();
+        }
+        else
+        {
+            rotasi2();
+        }
+
+    SusuKaleng2();
+    SusuKaleng();
+    glPopMatrix();
+
+    // Merender Objek Teh Gelas
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    glScalef(ukuranTG, ukuranTG, ukuranTG);
+    glTranslatef(-1.0, 0.0, 0.0);
+
+    if (mode_rotasi == 0)
+    {
+        rotasi1();
+    }
+    else
+    {
+        rotasi2();
+    }
+
+    TehGelas();
+    glPopMatrix();
+
+    glutSwapBuffers();
+}
+
+// Fungsi untuk menangani perubahan ukuran jendela (Chikal)
+void reshape(int w, int h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(60.0, (double)w / (double)h, 1.0, 10.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+
+// Fungsi untuk memperbarui rotasi objek (Chikal)
+void updateRotation() {
+    angleX += 0.01f; // Kecepatan rotasi pada sumbu X
+    angleY += 0.01f; // Kecepatan rotasi pada sumbu Y
+
+    if (angleX > 360.0f) angleX -= 360.0f;
+    if (angleY > 360.0f) angleY -= 360.0f;
+
+    glutPostRedisplay(); // Meminta redisplay
+}
+
+//Fungsi untuk menggambar sumbu cartecius (Saban)
+void drawCartecius() 
+{
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_LINES);
+    //x line
+    glVertex3f(-10.0, 0.0, 0.0);
+    glVertex3f(10.0, 0.0, 0.0);
+
+    //y line
+    glVertex3f(0.0, -10.0, 0.0);
+    glVertex3f(0.0, 10.0, 0.0);
+
+    // z line
+    glVertex3f(0.0, 0.0, -10.0);
+    glVertex3f(0.0, 0.0, 10.0);
+    glEnd();
+}
+ 
+//Fungsi untuk mengatur keyboard (Chikal)
+void myKeyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+        case 'c':
+            hidden = !hidden;
+            break;
+        case '1':
+            mode_rotasi = 0;
+            break;
+        case '2':    
+            mode_rotasi = 1;
+            break;
+        case 't':
+            ukuranTK -= 0.1;
+            break;
+        case 'T':
+            ukuranTK += 0.1;
+            break;
+        case 'y':
+            ukuranSK -= 0.1;
+            break;
+        case 'Y':
+            ukuranSK += 0.1;
+            break;
+        case 'u':    
+            ukuranTG -= 0.1;
+            break;
+        case 'U':    
+            ukuranTG += 0.1;
+            break;
+        case 'r':
+            ukuranTK=1.0;
+            ukuranSK=1.0;
+            ukuranTG=1.0;
+            break;
+    }
+    glutPostRedisplay();
+}
+
+// Fungsi untuk menyembunyikan sumbu cartecius (Saban)
+void hiddenCarte()
+{
+    if (hidden)
+    {
+        drawCartecius();
+    }
+}
+
+// Fungsi untuk rotasi objek mode 1 (Chikal)
+void rotasi1()
+{
+    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
+}
+
+// Fungsi untuk rotasi objek mode 2 (Chikal)
+void rotasi2()
+{
+    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+    glRotatef(angleY, 0.0f, 0.0f, 1.0f);
+}
+                                           
+                                           
+//Fungsi Objek Susu Kaleng (Rahma)
 void SusuKaleng() {
     GLUquadric* object = gluNewQuadric();
     gluQuadricTexture(object, GL_TRUE);
@@ -141,7 +311,7 @@ void SusuKaleng() {
     glPopMatrix();
 }
 
-// Fungsi Objek Kaleng Bagian Dalam
+// Fungsi Objek Kaleng Bagian Dalam (Rahma)
 void SusuKaleng2() {
     GLUquadric* object = gluNewQuadric();
     gluQuadricTexture(object, GL_TRUE);
@@ -155,7 +325,28 @@ void SusuKaleng2() {
     gluCylinder(object, 0.1699f, 0.1699f, 0.6159f, 50, 20);
 }
 
-// Fungsi Objek Teh Kotak
+//Pencahayaan (Rahma)
+void pencahayaan()
+{
+    // Pencahayaan
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_DEPTH_TEST);
+
+    // Set light properties
+    GLfloat light_pos[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat light_amb[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    GLfloat light_diff[] = {0.8f, 0.8f, 0.8f, 1.0f};
+    GLfloat light_spec[] = {1.0f, 1.0f, 1.0f, 1.0f};
+
+    glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diff);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_spec);
+}
+
+// Fungsi Objek Teh Kotak (Chikal)
 void TehKotak() {
     glEnable(GL_TEXTURE_2D);
 
@@ -221,7 +412,7 @@ void TehKotak() {
 }
 
 
-// Fungsi Objek Teh Gelas
+// Fungsi Objek Teh Gelas (Saban)
 void TehGelas()
 {
     GLUquadric* object = gluNewQuadric();
@@ -271,191 +462,4 @@ void TehGelas()
     glPopMatrix();
 }
 
-// Fungsi untuk merender objek
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
 
-    // Mengatur kamera
-    gluLookAt(2.0, 2.0, -2.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    hiddenCarte();
-
-    // Merender Objek Teh Kotak
-    glPushMatrix();
-    glScalef(ukuranTK, ukuranTK, ukuranTK);
-    glTranslatef(0.5, 0.0, -0.5);
-    
-    if (mode_rotasi == 0)
-    {
-        rotasi1();
-    }
-    else
-    {
-        glRotatef(angleY, 0.0f, 1.0f, 0.0f);
-    }
-
- 
-    TehKotak();
-    glPopMatrix();
-
-    // Merender Objek Susu Kaleng
-    glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
-    glScalef(ukuranSK, ukuranSK, ukuranSK);
-    glTranslatef(0.0, 0.0, 1.0); // Posisikan di samping Teh Kotak
-    if (mode_rotasi == 0)
-        {
-            rotasi1();
-        }
-        else
-        {
-            rotasi2();
-        }
-
-    SusuKaleng2();
-    SusuKaleng();
-    glPopMatrix();
-
-    // Merender Objek Teh Gelas
-    glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
-    glScalef(ukuranTG, ukuranTG, ukuranTG);
-    glTranslatef(-1.0, 0.0, 0.0);
-
-    if (mode_rotasi == 0)
-    {
-        rotasi1();
-    }
-    else
-    {
-        rotasi2();
-    }
-
-    TehGelas();
-    glPopMatrix();
-
-    glutSwapBuffers();
-}
-
-// Fungsi untuk menangani perubahan ukuran jendela
-void reshape(int w, int h) {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0, (double)w / (double)h, 1.0, 10.0);
-    glMatrixMode(GL_MODELVIEW);
-}
-
-// Fungsi untuk memperbarui rotasi objek
-void updateRotation() {
-    angleX += 0.01f; // Kecepatan rotasi pada sumbu X
-    angleY += 0.01f; // Kecepatan rotasi pada sumbu Y
-
-    if (angleX > 360.0f) angleX -= 360.0f;
-    if (angleY > 360.0f) angleY -= 360.0f;
-
-    glutPostRedisplay(); // Meminta redisplay
-}
-
-//Fungsi untuk menggambar sumbu cartecius
-void drawCartecius()
-{
-    glColor3f(1.0, 1.0, 1.0);
-    glBegin(GL_LINES);
-    //x line
-    glVertex3f(-10.0, 0.0, 0.0);
-    glVertex3f(10.0, 0.0, 0.0);
-
-    //y line
-    glVertex3f(0.0, -10.0, 0.0);
-    glVertex3f(0.0, 10.0, 0.0);
-
-    // z line
-    glVertex3f(0.0, 0.0, -10.0);
-    glVertex3f(0.0, 0.0, 10.0);
-    glEnd();
-}
- 
-//Fungsi untuk mengatur keyboard (Chikal)
-void myKeyboard(unsigned char key, int x, int y)
-{
-    switch (key)
-    {
-        case 'c':
-            hidden = !hidden;
-            break;
-        case '1':
-            mode_rotasi = 0;
-            break;
-        case '2':    
-            mode_rotasi = 1;
-            break;
-        case 't':
-            ukuranTK -= 0.1;
-            break;
-        case 'T':
-            ukuranTK += 0.1;
-            break;
-        case 'y':
-            ukuranSK -= 0.1;
-            break;
-        case 'Y':
-            ukuranSK += 0.1;
-            break;
-        case 'u':    
-            ukuranTG -= 0.1;
-            break;
-        case 'U':    
-            ukuranTG += 0.1;
-            break;
-        case 'r':
-            ukuranTK=1.0;
-            ukuranSK=1.0;
-            ukuranTG=1.0;
-            break;
-    }
-    glutPostRedisplay();
-}
-
-// Fungsi untuk menyembunyikan sumbu cartecius
-void hiddenCarte()
-{
-    if (hidden)
-    {
-        drawCartecius();
-    }
-}
-
-// Fungsi untuk rotasi objek mode 1
-void rotasi1()
-{
-    glRotatef(angleX, 1.0f, 0.0f, 0.0f);
-    glRotatef(angleY, 0.0f, 1.0f, 0.0f);
-}
-
-// Fungsi untuk rotasi objek mode 2
-void rotasi2()
-{
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    glRotatef(angleY, 0.0f, 0.0f, 1.0f);
-}
-
-void pencahayaan()
-{
-    //Pencahayaan
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_DEPTH_TEST);
-
-    // Set light properties
-    GLfloat light_pos[] = {0.0f, 0.0f, 0.0f, 1.0f};
-    GLfloat light_amb[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    GLfloat light_diff[] = {0.8f, 0.8f, 0.8f, 1.0f};
-    GLfloat light_spec[] = {1.0f, 1.0f, 1.0f, 1.0f};
-
-    glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_amb);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diff);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_spec);
-}
