@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 // Prototype (Saban)
+void minScale();
 void hiddenCarte();
 void TehKotak();
 void drawCartecius();
@@ -70,6 +71,15 @@ int main(int argc, char** argv) {
     pencahayaan(); // Fungsi pencahayaan
     glutMainLoop(); // Loop utama
     return 0;
+}
+
+void MinScale(float &ukuran)
+{
+    ukuran-=0.1;
+    if (ukuran <0.1)
+    {
+        ukuran=0.1;
+    }
 }
 
 // Fungsi untuk memuat tekstur dari file gambar (Chikal)
@@ -231,20 +241,20 @@ void myKeyboard(unsigned char key, int x, int y)
         case '2':    
             mode_rotasi = 1;
             break;
-        case 't':
-            ukuranTK -= 0.1;
-            break;
         case 'T':
             ukuranTK += 0.1;
             break;
+        case 't':
+            MinScale(ukuranTK);
+            break;
         case 'y':
-            ukuranSK -= 0.1;
+            MinScale(ukuranSK);
             break;
         case 'Y':
             ukuranSK += 0.1;
             break;
         case 'u':    
-            ukuranTG -= 0.1;
+            MinScale(ukuranTG);
             break;
         case 'U':    
             ukuranTG += 0.1;
