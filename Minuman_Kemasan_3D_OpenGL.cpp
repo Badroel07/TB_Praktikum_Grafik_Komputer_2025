@@ -30,7 +30,6 @@ GLuint sisi_TehGelas, atas1_TehGelas, atas2_TehGelas, penutup_TehGelas, penutup2
 GLuint texture_sisiKaleng, texture_atas, texture_bawah, tekstur_kaleng;
 GLuint textureFront, textureBack, textureLeft, textureRight, textureTop, textureBottom;
 float angleX = 0.0f, angleY = 0.0f; // Variabel rotasi
-float tick = 0.0;
 
 // Fungsi utama (Chikal)
 int main(int argc, char** argv) {
@@ -363,13 +362,13 @@ void TehKotak() {
     glBindTexture(GL_TEXTURE_2D, textureBack);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0, 0.0); 
-    glVertex3f(-0.3, -0.5, -0.2);
-    glTexCoord2f(1.0, 0.0); 
-    glVertex3f(-0.3,  0.5, -0.2);
-    glTexCoord2f(1.0, 1.0); 
-    glVertex3f( 0.3,  0.5, -0.2);
-    glTexCoord2f(0.0, 1.0); 
     glVertex3f( 0.3, -0.5, -0.2);
+    glTexCoord2f(1.0, 0.0); 
+    glVertex3f(-0.3, -0.5, -0.2);
+    glTexCoord2f(1.0, 1.0); 
+    glVertex3f(-0.3,  0.5, -0.2);
+    glTexCoord2f(0.0, 1.0); 
+    glVertex3f( 0.3,  0.5, -0.2);
     glEnd();
 
     // Sisi kiri
